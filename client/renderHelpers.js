@@ -1,4 +1,4 @@
-import { fetchAllPlayers } from './ajaxHelpers';
+import { fetchAllPlayers, addNewPlayer, fetchSinglePlayer } from './ajaxHelpers';
 
 const playerContainer = document.getElementById('all-players-container');
 const newPlayerFormContainer = document.getElementById('new-player-form');
@@ -14,16 +14,15 @@ export const renderAllPlayers = (playerList) => {
   let playerContainerHTML = '';
   for (let i = 0; i < playerList.length; i++) {
     const pup = playerList[i];
-    let pupHTML = `
-      <div class="single-player-card">
+    let pupHTML = 
+      `<div class="single-player-card">
         <div class="header-info">
           <p class="pup-title">${pup.name}</p>
           <p class="pup-number">#${pup.id}</p>
         </div>
-        <img src="${pup.imageUrl}" alt="photo of ${pup.name} the puppy">
+        <img src="${pup.imageUrl}" alt="photo of ${pup.name} the puppy"></img>
         <button class="detail-button" data-id=${pup.id}>See details</button>
-      </div>
-    `;
+        </div>`;
     playerContainerHTML += pupHTML;
   }
 
@@ -37,9 +36,8 @@ export const renderAllPlayers = (playerList) => {
   for (let i = 0; i < detailButtons.length; i++) {
     const button = detailButtons[i];
     button.addEventListener('click', async () => {
-      /*
-        YOUR CODE HERE
-      */
+      const player = await fetchSinglePlayer(button.dataset.id);
+      renderSinglePlayer(player);
     });
   }
 };
@@ -66,7 +64,14 @@ export const renderSinglePlayer = (playerObj) => {
   `;
 
   playerContainer.innerHTML = pupHTML;
+
+  let allButton = document.getElementById('see-all');
+  allButton.addEventListener('click', async () => {
+    const players = await fetchAllPlayers()
+    renderAllPlayers(players);
+  })
 };
+
 
 export const renderNewPlayerForm = () => {
   let formHTML = `
@@ -82,6 +87,9 @@ export const renderNewPlayerForm = () => {
 
   let form = document.querySelector('#new-player-form > form');
   form.addEventListener('submit', async (event) => {
+    addNewPlayer({
+
+    })
     /*
       YOUR CODE HERE
     */
